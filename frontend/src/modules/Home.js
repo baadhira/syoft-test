@@ -42,10 +42,13 @@ export const Home = () => {
   var decoded = jwt_decode(token);
 
  }
-  console.log("decoded",decoded);
-  if(token===null){
-
+useEffect(() => {
+  if (token===null){
+    navigate('signin')
   }
+})
+  console.log("decoded",decoded);
+ 
   const currentUser=user?.filter(fil=>fil.id=== decoded.user_id).map(data=>data.role)
   console.log("user role",currentUser);
 
