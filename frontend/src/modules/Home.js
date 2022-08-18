@@ -88,16 +88,24 @@ export const Home = () => {
 
   return (
     <div>
-      {logindata===0 || token ===null || currentUser=="Staff"?
+      {
+      logindata===0 || token ===null ?
       <>
       <div style={{display: 'flex', flexDirection: 'column',justifyContent:"center",alignItems:"center"}}>
       <h1>
-        Error
+        Login to account 
       </h1>
       <button className="btn btn-primary" onClick={()=>navigate("/signin")}>Redirect Login Page</button>
       </div>
-      {/* {navigate('signin')} */}
-      </>
+      {navigate('/signin')}
+      </>:
+       token !==null && currentUser=="Staff"?
+      <div style={{display: 'flex', flexDirection: 'column',justifyContent:"center",alignItems:"center"}}>
+      <h1>
+        You have no permission to view this page
+      </h1>
+      <button className="btn btn-primary" onClick={()=>navigate("/signin")}>Redirect Login Page</button>
+      </div>
 
       :
       <>
