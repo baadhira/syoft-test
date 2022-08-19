@@ -27,13 +27,15 @@ class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer]
     def post(self,request,format=None):
         serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             user = serializer.save()
             token = get_tokens_for_user(user)
             print("user",user)
-            return Response({'token':token,'msg':'Registration successful'})
-            status = status.HTTP_201_CREATED
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response({'token':token,'msg':'Registration successful'},status = status.HTTP_201_CREATED)
+            
+        else:
+            print("serializer.errors")
+            return Response(serializer.errors)
 
 
 

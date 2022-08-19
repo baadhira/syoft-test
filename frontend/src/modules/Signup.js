@@ -6,6 +6,7 @@ import { Text } from "../components/Input/Input";
 import { H3, H5 } from "../components/Text/Text";
 import { Flex } from "../components/UI/Flex/Flex";
 import { BASE_URL } from "../BaseUrl";
+import Alert from 'react-bootstrap/Alert';
 
 import "./Login.scss";
 import { DropDown } from "../components/Input/Input";
@@ -20,7 +21,10 @@ export const Signup = () => {
   const [password, setPassword] = useState("");
   const [repassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [error_username, setErrorUsername] = useState("");
+
   const [role, setRole] = useState("");
+  const [show, setShow] = useState(false);
 
   const [loading, setloading] = useState(false);
 
@@ -53,7 +57,7 @@ export const Signup = () => {
   alert("role field is required")
 }
 else{
-    console.log("data added successfully");
+    
     const config = {
       header: {
         "Content-Type": "application/json",
@@ -64,7 +68,7 @@ else{
       setPassword("");
       setConfirmPassword("");
       setTimeout(() => {
-        setError("");
+        // setError("");
       }, 5000);
       alert("Passwords do not match");
     }
@@ -75,7 +79,7 @@ else{
       setTimeout(() => {
         setloading(false);
       }, 3000);
-
+       
       const { data } = await axios.post(
         `${BASE_URL}api/register/`,
         {
@@ -88,18 +92,34 @@ else{
         },
         config
       );
-
-      localStorage.setItem("authToken", data.token.access);
+      console.log("data",data)
+      if(data.errors){
+        console.log("error data",data.errors)
+        if(data.errors.email){
+          setShow(true)
+          setError(data.errors.email)
+        }else if (data.errors.username){
+          setShow(true)
+          setErrorUsername(data.errors.username)
+        }else{
+          return null
+        }
+      }else{
+        console.log("data added successfully");
+        localStorage.setItem("authToken", data.token.access);
       navigate('/signin')
+      }
+
+      
 
      
 
       // navigate("/signin");
 
     } catch (error) {
-      setError(error.response.data.error);
+      // setError(error.response.data.error);
       setTimeout(() => {
-        setError("");
+        // setError("");
       }, 10);
     }
 
@@ -108,11 +128,19 @@ else{
 
     
   };
+  console.log("set errror email",error);
+
+  const CloseEmail=()=>{
+    setShow(false)
+    setError('')
+  }
+
 
   return (
     <div className="login">
-      <div className="login_container">
+      <div className="login_container" style={{position: 'relative'}}>
         <H3 margin="20px">Create an Account ?</H3>
+        {/* <h3></h3> */}
 
         <Flex width="90%">
           <Text
@@ -120,6 +148,7 @@ else{
             type="email"
             onChange={(e) => setEmail(e.target.value)}
           />
+         
 
           <Text
             placeholder="Enter your Phone No."
@@ -157,6 +186,33 @@ else{
           onClick={() => setHide(!hide)}
           class={hide ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}
         ></i>
+        <H5 color="red"></H5>
+       {error_username && show?
+       <>
+       <div style={{position:"absolute",marginTop:"60%"}}>
+      <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+      <Alert.Heading >{error_username?error_username:null}</Alert.Heading>
+     
+    </Alert>
+    </div>
+    </>
+      :null
+  }
+
+{error && show?
+       <>
+       <div style={{position:"absolute",marginTop:"30%"}}>
+
+
+      <Alert variant="danger"onClose={() => CloseEmail()} dismissible>
+        <Alert.Heading >{error!==""?error:null}</Alert.Heading>
+       
+      </Alert>
+    </div>
+
+    </>
+      :null
+  }
 
         <PrimaryBtn onClick={onSubmit} margin="30px 0" width="90%">
           Signup

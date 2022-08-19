@@ -18,6 +18,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def validate(self,attrs):
         password =attrs.get('password')
         repassword =attrs.get('repassword')
+        email=attrs.get('email')
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError("Email already exists")
         if password != repassword:
             raise serializers.ValidationError("passwords doesn't match")
         return attrs
