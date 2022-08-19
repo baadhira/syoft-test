@@ -112,8 +112,9 @@ useEffect(() => {
 
       :
       <>
+        <h2 className="text-center mt-5">Welcome {currentUser?currentUser:null}</h2>
+
       <div style={{display: 'flex', flexDirection:"row",justifyContent:"center",alignItems:"center",padding:"50px"}}>
-        <H2>Welcome {currentUser?currentUser:null}</H2>
       {createProduct ? (
     <div className="bg_black">
       <CreateProduct setCreateProduct={setCreateProduct} />

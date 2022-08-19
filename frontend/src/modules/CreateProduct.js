@@ -58,7 +58,9 @@ export const CreateProduct = ({ setCreateProduct }) => {
         setCreateProduct(false);
         window.location.reload();
         navigate('/')
-      });
+      }).then((error)=>{
+        console.log("error create product",error);
+      })
   };
 
   return (
